@@ -1,0 +1,241 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id             String        @id @default(uuid())
+  name           String?
+  email          String?       @unique
+  image          String?
+  firstName      String?
+  lastName       String?
+  phone_number   String
+  address        String?       @db.Text
+  account_status AccountStatus @default(active)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  provider       String?
+  password       String?
+  providerId     String?       @unique
+
+  bookings      Booking[]
+  permissions   Permission[]
+  reviews       Review[]
+  listings      Listing[]
+  announcements Announcement[]
+  favorites     Favorite[]
+
+  @@index([email])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  listingId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Permission {
+  id           String   @id @default(uuid())
+  can_book     Boolean  @default(true)
+  can_add_room Boolean  @default(false)
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Price {
+  id        Int        @id @default(autoincrement())
+  min_price Float
+  max_price Float
+  mkt_price Float
+  updatedAt DateTime   @updatedAt
+  dialyId   Int?
+  monthlyId Int?
+  daily     RoomPrice? @relation("DailyPrice", fields: [dialyId], references: [id], onDelete: Cascade)
+  monthly   RoomPrice? @relation("MonthlyPrice", fields: [monthlyId], references: [id], onDelete: Cascade)
+}
+
+model RoomPrice {
+  id        Int      @id @default(autoincrement())
+  updatedAt DateTime @updatedAt
+  roomId    String
+  daily     Price[]  @relation("DailyPrice")
+  monthly   Price[]  @relation("MonthlyPrice")
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model AddressComponent {
+  id         Int     @id @default(autoincrement())
+  long_name  String
+  short_name String
+  addressId  String
+  types      Json
+  address    Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
+}
+
+model Location {
+  id        Int     @id @default(autoincrement())
+  lat       Float
+  lng       Float
+  addressId String
+  address   Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
+}
+
+model Address {
+  id                 String             @id @default(uuid())
+  formatted_address  String
+  address_components AddressComponent[]
+  district           String?
+  subdistrict        String?
+  province           String
+  house_num          String?
+  location           Location[]
+  postcode           String
+  updatedAt          DateTime           @updatedAt
+
+  listingId String  @unique
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+model RoomDetail {
+  id             Int   @id @default(autoincrement())
+  area           Float
+  room_count     Int
+  bathroom_count Int
+  floor          Int
+  updatedAt      DateTime @updatedAt
+  roomId         String
+  room           Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model ProcessedFile {
+  id       Int    @id @default(autoincrement())
+  publicId String
+  url      String
+  height   Int
+  width    Int
+
+  listingId String?
+  roomId    String?
+
+  listing Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  room   Room?   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model Room {
+  id          String         @id @default(uuid())
+  room_type   RoomType    @default(Studio)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  listingId   String
+  images      ProcessedFile[]
+  booking     Booking[]
+  price   RoomPrice[]
+  status      String      @default("pending")
+  announcementId String?
+  roomDetail  RoomDetail[]
+
+  announcement Announcement? @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  listing     Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  comment    String
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  listingId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  placeType   RoomType
+
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms       Room[]
+  userId      String
+
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Listing {
+  id          String   @id @default(uuid())
+  name        String
+  description String  @db.Text
+  image_cover ProcessedFile[]
+  slug        String  @unique
+  type        RoomType
+  pricerange  String
+  status      String   @default("available")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings Booking[]
+  rooms    Room[]
+  reviews  Review[]
+  ownerId  String
+
+  address Address[]
+  owner   User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+}
+
+model Booking {
+  id        String        @id @default(uuid())
+  checkIn   DateTime
+  checkOut  DateTime
+  total     Float
+  status    BookingStatus @default(pending)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  userId    String
+  roomId    String
+  listingId String?
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  Listing   Listing?      @relation(fields: [listingId], references: [id])
+}
+
+enum AccountStatus {
+  active
+  inactive
+  suspended
+}
+
+enum RoomType {
+  Studio
+  Dorm
+  Apartment
+  House
+  Hotel
+  Condominium
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  canceled
+}
