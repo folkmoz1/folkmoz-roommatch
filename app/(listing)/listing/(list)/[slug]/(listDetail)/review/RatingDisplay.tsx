@@ -20,6 +20,8 @@ export const RatingDisplay = ({
 }) => {
   const isRounded = rating?.overallRatingRounded === rating?.overallRating;
 
+  const isHalf = rating?.overallRatingRounded !== rating?.overallRating;
+
   return (
     <>
       <div className={'flex flex-col sm:flex-row gap-8'}>
@@ -35,16 +37,18 @@ export const RatingDisplay = ({
               <div className={'flex gap-1'}>
                 {rating && (
                   <>
-                    {[...Array(rating?.overallRatingRounded)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        fill={'#FFAD33'}
-                        color={'#FFAD33'}
-                        strokeWidth={2}
-                      />
-                    ))}
-                    {!isRounded && (
+                    {[...Array(Math.floor(rating?.overallRatingRounded))].map(
+                      (_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          fill={'#FFAD33'}
+                          color={'#FFAD33'}
+                          strokeWidth={2}
+                        />
+                      )
+                    )}
+                    {isHalf && (
                       <Star
                         size={16}
                         fill={'#FFAD33'}

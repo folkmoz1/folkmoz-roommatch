@@ -45,9 +45,9 @@ export const saveNewReview = async (formData: FormData) => {
 
   const comment = formData.get('comment') as string;
   const rating = formData.get('rating');
-  const listingId = formData.get('listingId') as string;
+  const listingSlug = formData.get('listingSlug') as string;
 
-  if (!comment || !rating || !listingId) {
+  if (!comment || !rating || !listingSlug) {
     return false;
   }
 
@@ -57,7 +57,7 @@ export const saveNewReview = async (formData: FormData) => {
       rating: Number(rating),
       listing: {
         connect: {
-          id: listingId,
+          slug: listingSlug,
         },
       },
       user: {
