@@ -4,6 +4,16 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/:listSlug/:roomId/',
+          destination: '/:listSlug/:roomId/index',
+        },
+      ],
+    };
+  },
   images: {
     remotePatterns: [
       {
