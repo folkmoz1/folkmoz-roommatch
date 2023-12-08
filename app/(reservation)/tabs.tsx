@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 const tabs = [
@@ -12,12 +12,12 @@ const tabs = [
     href: '',
   },
   {
-    label: 'รายละเอียด',
-    href: '/detail',
+    label: 'ประวัติ',
+    href: 'history',
   },
   {
-    label: 'รีวิว',
-    href: '/review',
+    label: 'ประกาศ',
+    href: 'announcement',
   },
 ];
 
@@ -34,8 +34,8 @@ const TabItem = ({
     <>
       <div>
         <Link
-          href={href}
-          className={cn('px-4 py-2 relative text-xl', {
+          href={href === '' ? `/reservation` : `/reservation?tab=${href}`}
+          className={cn('px-4 md:px-6 py-2 relative text-xl', {
             'text-black': active,
             'text-muted': !active,
           })}
@@ -57,33 +57,27 @@ const TabItem = ({
   );
 };
 
-export const Tabs = ({ slug }: { slug: string }) => {
-  const currentPath = usePathname();
+export const Tabs = () => {
+  const searchParams = useSearchParams();
 
-  const getActiveTab = () => {
-    const currentTab = tabs.find((tab) => {
-      return currentPath === `/listing/${slug}${tab.href}`;
-    });
-    if (currentTab) {
-      return currentTab;
-    }
-    return tabs[0];
-  };
+  const tabActive = searchParams.get('tab');
 
   useEffect(() => {
     window.scrollTo({ top: 500, behavior: 'smooth' });
-  }, [currentPath]);
+  }, [tabActive]);
 
   return (
     <>
-      <div className={'flex w-full justify-between sm:w-auto md:gap-12'}>
+      <div className={'flex w-full justify-between sm:w-auto md:gap-20'}>
         {tabs.map((tab, index) => {
           return (
             <TabItem
               key={index}
               name={tab.label}
-              href={`/listing/${slug}${tab.href}`}
-              active={tab.label === getActiveTab().label}
+              href={tab.href}
+              active={
+                tabActive === tab.href || (tabActive === null && index === 0)
+              }
             />
           );
         })}

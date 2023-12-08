@@ -5,14 +5,13 @@ import { FavoriteEntries } from '@/app/(favorite)/favorite/listEntries';
 export default async function FavoritePage() {
   const session = await auth();
 
-  console.log('session', session);
   return (
     <>
       <main>
         <section>
           <div
             className={
-              'h-[400px] md:h-[600px] flex justify-center pt-20 md:pt-40 w-full bg-[--neutral-200] relative'
+              'h-[400px] md:h-[600px] flex justify-center pt-20 md:pt-40 w-full bg-[--neutral-200] relative overflow-hidden'
             }
           >
             <div
@@ -70,10 +69,25 @@ export default async function FavoritePage() {
             <div className={'text-center text-3xl font-kanit font-semibold'}>
               รายการโปรด
             </div>
-            {session ? <FavoriteEntries /> : <>Please login</>}
+            {session ? <FavoriteEntries /> : <WithoutAuth />}
           </div>
         </div>
       </main>
     </>
   );
 }
+
+const WithoutAuth = () => (
+  <>
+    <div className={'w-full flex flex-col justify-center items-center my-20'}>
+      <img src="/images/love-it.svg" className={'w-36'} alt="" />
+      <h2
+        className={
+          'text-xl font-kanit font-semibold text-center mt-8 text-muted'
+        }
+      >
+        เข้าสู่ระบบเพื่อดูรายการโปรดของคุณ
+      </h2>
+    </div>
+  </>
+);

@@ -10,6 +10,7 @@ import { useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
 import { createNewUser } from '@/lib/actions';
 import { useToast } from '@/components/ui/use-toast';
+import { signIn } from 'next-auth/react';
 
 export const RegisterForm = ({ changePage }: { changePage: () => void }) => {
   const [isPending, startTransition] = useTransition();
@@ -155,6 +156,7 @@ export const RegisterForm = ({ changePage }: { changePage: () => void }) => {
           </motion.div>
           <div className={'mt-10'}>
             <Button
+              type={'submit'}
               disabled={!isDirty || !isValid || isPending || !acceptTerms}
               variant={'action'}
               size={'lg'}
@@ -164,6 +166,9 @@ export const RegisterForm = ({ changePage }: { changePage: () => void }) => {
             </Button>
             <div className={'my-4 text-muted text-center'}>หรือ</div>
             <Button
+              disabled={isPending}
+              onClick={() => signIn('line')}
+              type={'button'}
               variant={'none'}
               size={'lg'}
               className={'text-white bg-line w-full text-xl'}

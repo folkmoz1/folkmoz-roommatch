@@ -40,6 +40,8 @@ model Favorite {
   updatedAt DateTime @updatedAt
   userId    String
   listingId String
+
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -196,6 +198,8 @@ model Listing {
   rooms    Room[]
   reviews  Review[]
   ownerId  String
+  favorites Favorite[]
+
 
   address Address[]
   owner   User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)

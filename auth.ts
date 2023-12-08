@@ -122,7 +122,7 @@ export const config = {
         if (account.type === 'oauth' && account.provider === 'line') {
           const findUser = await prisma.user.findFirst({
             where: {
-              providerId: account.id as string,
+              providerId: account.providerAccountId as string,
             },
             select: {
               id: true,

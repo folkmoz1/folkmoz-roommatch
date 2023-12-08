@@ -2,7 +2,6 @@
 import { useSession } from 'next-auth/react';
 import { useModal } from '@/components/context/modal';
 import { useEffect, useRef, useState } from 'react';
-import { Footer } from '@/components/Footer';
 import Image from 'next/image';
 import heroTower from '/public/images/hero-tower.svg';
 import { StepperForm } from '@/components/form/Stepper';

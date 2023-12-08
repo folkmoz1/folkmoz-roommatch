@@ -1,7 +1,7 @@
 'use client';
-import { Session } from '@/types/next-auth';
+import { Session } from 'next-auth';
 import Image from 'next/image';
-import { Bell, LogOut } from 'lucide-react';
+import { Bell, LogOut, User } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { signOut } from 'next-auth/react';
 import { NewAnnouncementButton } from '@/components/Header/actions';
+import Link from 'next/link';
 
 export const MenuWithAuth = ({ session }: { session: Session }) => {
   return (
@@ -33,6 +34,18 @@ export const MenuWithAuth = ({ session }: { session: Session }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className={'w-56'}>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link href={'/profile'}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Bell className={'mr-2'} size={16} />
+                  <span>Notification</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator className={'bg-neutral-200'} />
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => signOut()}>

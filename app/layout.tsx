@@ -48,9 +48,9 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
-          <Toaster />
           <TailwindIndicator />
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

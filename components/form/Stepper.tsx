@@ -3,13 +3,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { stepperDetailSchema, stepperTitleSchema } from '@/lib/formValidate';
 import { Form } from '@/components/ui/form';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useFormCreatePlaceStore } from '@/lib/zustand/store';
-import { TitleStep } from '@/components/form/Stepper-subset/TitleStep';
 import { Button } from '@/components/ui/button';
-import { DetailStep } from '@/components/form/Stepper-subset/DetailStep';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
+import { TitleStep } from '@/components/form/Stepper-subset/TitleStep';
+import { DetailStep } from '@/components/form/Stepper-subset/DetailStep';
 import { ReviewStep } from '@/components/form/Stepper-subset/ReviewStep';
 import {
   Dialog,
@@ -21,9 +21,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { CloudinaryAPI } from '@/lib/apis/CloudinaryAPI';
-import { createNewListing } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+
 export const StepperForm = () => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -174,7 +174,7 @@ export const StepperForm = () => {
 
       window.onbeforeunload = () => true;
     } else {
-      window.onbeforeunload = undefined;
+      window.onbeforeunload = () => null;
     }
 
     return () => {
@@ -187,25 +187,27 @@ export const StepperForm = () => {
   return (
     <>
       <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
-        <Form {...formProps}>
-          <StepperDisplay step={step} />
-          <form
-            onSubmit={
-              step === 0
-                ? placeForm.handleSubmit(onSubmitFirstStep)
-                : detailForm.handleSubmit(onSubmitSecondStep)
-            }
-          >
-            <div
-              className={cn('max-w-4xl mt-8 mx-auto space-y-4', {
-                'opacity-50': loading,
-              })}
+        <div
+          className={cn('max-w-4xl mt-8 mx-auto', {
+            'opacity-50': loading,
+          })}
+        >
+          <Form {...formProps}>
+            <StepperDisplay step={step} />
+            <form
+              className={' space-y-4'}
+              onSubmit={
+                step === 0
+                  ? placeForm.handleSubmit(onSubmitFirstStep)
+                  : detailForm.handleSubmit(onSubmitSecondStep)
+              }
             >
               {getStepContent(step)}
+
               {!loading && (
                 <>
                   {step !== 2 ? (
-                    <div className={'flex justify-end'}>
+                    <div className={'flex justify-end mt-4'}>
                       <Button
                         type={'submit'}
                         variant={'action'}
@@ -230,9 +232,9 @@ export const StepperForm = () => {
                   )}
                 </>
               )}
-            </div>
-          </form>
-        </Form>
+            </form>
+          </Form>
+        </div>
 
         <DialogContent className={'font-kanit'}>
           <DialogHeader>

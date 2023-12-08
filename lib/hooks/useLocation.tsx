@@ -77,5 +77,5 @@ export const useLocation = () => {
     }
   }, []);
 
-  return { center: position, getNewPosition, address };
+  return { center: position, getNewPosition, address, setPosition };
 };

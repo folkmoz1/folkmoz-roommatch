@@ -6,9 +6,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn, fetcher } from '@/lib/utils';
-import { FormControl, FormField, FormItem } from '@/components/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 import useSWR from 'swr';
-import { Listing } from '@prisma/client';
+import { Listing, Prisma } from '@prisma/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import GoogleMaps from '@/components/GoogleMaps';
@@ -44,20 +49,41 @@ const PlaceType = ({
 };
 
 export const TitleStep = ({ control, form }: { control: any; form: any }) => {
-  const { data } = useSWR<Partial<Listing>>(
-    '/api/listing/get?cols=name&limit=10',
-    fetcher
-  );
+  const { data } = useSWR<
+    {
+      data: Prisma.ListingGetPayload<{
+        include: {
+          address: {
+            include: {
+              location: true;
+            };
+          };
+        };
+      }>[];
+    },
+    Error
+  >('/api/listing/get?cols=name,address&limit=10', fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const { setFormOne, form: formStore } = useFormCreatePlaceStore(
     (state) => state
   );
 
-  const { center, address, getNewPosition } = useLocation();
+  const { center, address, getNewPosition, setPosition } = useLocation();
 
-  const onSelected = (type: string) => {
+  const onSelectedType = (type: string) => {
     form.setValue('placeType', type);
     setFormOne({ place: { ...formStore.place, placeType: type } });
+  };
+
+  const onSelectedProject = (id: string) => {
+    form.setValue('placeName', id);
+    const getLatLng = data?.data.find((item) => item.id === id)?.address;
+    if (!getLatLng) return;
+    const lat = getLatLng[0].location[0].lat;
+    const lng = getLatLng[0].location[0].lng;
+    setPosition({ lat, lng });
   };
 
   useEffect(() => {
@@ -74,19 +100,19 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
           <PlaceType
             key={0}
             label={'คอนโด'}
-            onClick={() => onSelected('Condominium')}
+            onClick={() => onSelectedType('Condominium')}
             selected={form.watch('placeType') === 'Condominium'}
           />
           <PlaceType
             key={1}
             label={'บ้าน'}
-            onClick={() => onSelected('House')}
+            onClick={() => onSelectedType('House')}
             selected={form.watch('placeType') === 'House'}
           />
           <PlaceType
             key={2}
             label={'หอพัก'}
-            onClick={() => onSelected('Dorm')}
+            onClick={() => onSelectedType('Dorm')}
             selected={form.watch('placeType') === 'Dorm'}
           />
         </div>
@@ -99,7 +125,10 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
                 ชื่อโครงการ <span className={'text-destructive'}>*</span>
               </div>
 
-              <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <Select
+                defaultValue={field.value}
+                onValueChange={(value) => onSelectedProject(value)}
+              >
                 <FormControl>
                   <SelectTrigger className={'font-light'}>
                     <SelectValue
@@ -107,6 +136,7 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
                     />
                   </SelectTrigger>
                 </FormControl>
+                <FormMessage />
                 <SelectContent>
                   {data &&
                     data?.data.map((item: any) => (
@@ -134,11 +164,17 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
         <div className="mt-2">
           <FormField
             render={({ field }) => (
-              <Input
-                {...field}
-                placeholder={'สร้างหัวเรื่องให้ประกาศดูน่าสนใจ'}
-                className={'w-full font-normal'}
-              />
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    autoComplete={'off'}
+                    placeholder={'สร้างหัวเรื่องให้ประกาศดูน่าสนใจ'}
+                    className={'w-full font-normal'}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
             name={'headline'}
           />
@@ -152,15 +188,16 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
           <FormField
             control={control}
             render={({ field }) => (
-              <>
+              <FormItem>
                 <FormControl>
                   <Textarea
                     {...field}
                     className={'font-normal min-h-[125px]'}
-                    placeholder={'บรรยายราละเอียดของที่พัก'}
+                    placeholder={'บรรยายรายละเอียดของที่พัก'}
                   />
                 </FormControl>
-              </>
+                <FormMessage />
+              </FormItem>
             )}
             name={'description'}
           />

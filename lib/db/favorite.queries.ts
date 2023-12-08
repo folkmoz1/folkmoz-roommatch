@@ -7,6 +7,18 @@ export const getFavorites = async (userId: string) => {
     where: {
       userId,
     },
+    include: {
+      listing: {
+        include: {
+          image_cover: true,
+          address: {
+            include: {
+              address_components: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   return entries;

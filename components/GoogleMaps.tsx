@@ -11,7 +11,7 @@ type GoogleMapsProps = {
     lng: number;
   } | null;
   getNewPosition?: (e: any) => void;
-  canDrag: boolean;
+  canDrag?: boolean;
   zoom?: number;
   width?: string | number | undefined;
   height?: string | number | undefined;

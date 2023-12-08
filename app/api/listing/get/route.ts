@@ -7,6 +7,20 @@ export async function GET(req: NextRequest) {
 
   // turn cols into one object with key and value true
   const colsArr = cols.split(',').reduce((acc, col) => {
+    if (col === 'address') {
+      acc['address'] = {
+        select: {
+          location: {
+            select: {
+              lat: true,
+              lng: true,
+            },
+          },
+        },
+      };
+      return acc;
+    }
+
     acc[col] = true;
     return acc;
   }, {});

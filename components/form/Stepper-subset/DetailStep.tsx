@@ -1,5 +1,10 @@
 import { Input } from '@/components/ui/input';
-import { FormControl, FormField, FormItem } from '@/components/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -40,6 +45,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                     className={'w-full font-normal'}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
             name={'area'}
@@ -61,6 +67,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                       <SelectValue placeholder="เลือกจำนวนห้องนอน" />
                     </SelectTrigger>
                   </FormControl>
+                  <FormMessage />
                   <SelectContent>
                     {Array.from({ length: 7 }).map((_, i) => (
                       <SelectItem key={i} value={i + 1 + ''}>
@@ -89,6 +96,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                       <SelectValue placeholder="เลือกจำนวนห้องน้ำ" />
                     </SelectTrigger>
                   </FormControl>
+                  <FormMessage />
                   <SelectContent>
                     {Array.from({ length: 4 }).map((_, i) => (
                       <SelectItem key={i} value={i + 1 + ''}>
@@ -108,6 +116,7 @@ export const DetailStep = ({ form }: { form: any }) => {
             render={({ field }) => (
               <FormItem>
                 <Title text={'ชั้นที่'} />
+
                 <Select
                   defaultValue={field.value}
                   onValueChange={field.onChange}
@@ -117,6 +126,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                       <SelectValue placeholder="เลือกชั้นที่พัก" />
                     </SelectTrigger>
                   </FormControl>
+                  <FormMessage />
                   <SelectContent>
                     {Array.from({ length: 20 }).map((_, i) => (
                       <SelectItem key={i} value={i + 1 + ''}>

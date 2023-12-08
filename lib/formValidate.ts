@@ -52,9 +52,9 @@ export const stepperTitleSchema = z.object({
   placeType: z.string().min(1, 'กรุณาเลือกประเภทสถานที่'),
   placeName: z
     .string({
-      required_error: 'กรุณากรอกชื่อสถานที่',
+      required_error: 'กรุณาเลือกสถานที่',
     })
-    .min(1, 'กรุณากรอกชื่อสถานที่'),
+    .min(1, 'กรุณาเลือกสถานที่'),
   location: z.string().min(1, 'กรุณากรอกที่อยู่สถานที่'),
   headline: z.string().min(1, 'กรุณากรอกหัวข้อสถานที่'),
   description: z.string().min(1, 'กรุณากรอกรายละเอียดสถานที่'),
@@ -62,9 +62,9 @@ export const stepperTitleSchema = z.object({
 
 export const stepperDetailSchema = z.object({
   area: z.string().min(1, 'กรุณากรอกขนาดพื้นที่'),
-  bedroom_count: z.string().min(1, 'กรุณากรอกจำนวนห้อง'),
-  bathroom_count: z.string().min(1, 'กรุณากรอกจำนวนห้องน้ำ'),
-  floor: z.string().min(1, 'กรุณากรอกชั้นที่'),
+  bedroom_count: z.string({ required_error: 'กรุณากรอกจำนวนห้องนอน' }),
+  bathroom_count: z.string({ required_error: 'กรุณากรอกจำนวนห้องน้ำ' }),
+  floor: z.string({ required_error: 'กรุณากรอกจำนวนชั้น' }),
   price: z.string().min(1, 'กรุณากรอกราคา'),
   mkt_price: z.string(),
 });

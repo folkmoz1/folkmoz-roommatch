@@ -1,12 +1,8 @@
 import { Prisma } from '@prisma/client';
 import Image from 'next/image';
 import React, { useEffect, useMemo, useTransition, useState } from 'react';
-import { Heart, MapPin, Star } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import {
-  addToFavorite,
-  removeFromFavorite,
-} from '@/components/CardItem/actions';
 import { useStore } from '@/lib/zustand/store';
 import { mutate } from 'swr';
 import { useModal } from '@/components/context/modal';
@@ -14,6 +10,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { IconUsed } from '@/components/IconUsed';
 import { DisplayStar } from '@/components/DisplayStar';
 import { getRating } from '@/lib/utils';
+import { addToFavorite, removeFromFavorite } from '@/lib/db/user.actions';
 
 type CardItemProps = Prisma.ListingGetPayload<{
   include: {
@@ -23,7 +20,7 @@ type CardItemProps = Prisma.ListingGetPayload<{
       };
     };
     image_cover: true;
-    reviews: true;
+    reviews?: true | undefined;
   };
 }>;
 
@@ -52,6 +49,7 @@ export const CardItem = React.memo(
           setLiked(true);
           await addToFavorite(id);
           mutate('/api/profile');
+          mutate('/api/user/favorite');
           toast({
             title: 'เพิ่มรายการโปรดสำเร็จ',
             description: 'รายการที่คุณเลือกได้ถูกเพิ่มเข้าไปในรายการโปรดแล้ว',
@@ -64,8 +62,10 @@ export const CardItem = React.memo(
           ).id;
           if (!favId) return;
           setLiked(false);
-          await removeFromFavorite(favId);
+          await removeFromFavorite(favId, profile.id);
           mutate('/api/profile');
+          mutate('/api/user/favorite');
+
           toast({
             title: 'ลบรายการโปรดสำเร็จ',
             description: 'รายการที่คุณเลือกได้ถูกลบออกจากรายการโปรดแล้ว',
@@ -102,7 +102,7 @@ export const CardItem = React.memo(
     const heartStrokeColor = liked ? '#D32F2F' : '#FFF';
     const heartFillColor = liked ? '#D32F2F' : 'none';
 
-    const rating = getRating(reviews);
+    const rating = reviews ? getRating(reviews) : null;
 
     return (
       <>
@@ -110,7 +110,7 @@ export const CardItem = React.memo(
           <Link href={`/listing/${listing.slug}`} scroll shallow>
             <div
               className={
-                'w-[306px] h-auto rounded-lg group overflow-hidden shadow-md bg-[--neutral-50] relative cursor-pointer hover:shadow-lg transition-all'
+                'w-full h-auto rounded-lg group overflow-hidden shadow-md bg-[--neutral-50] relative cursor-pointer hover:shadow-lg transition-all'
               }
             >
               <div
@@ -153,9 +153,11 @@ export const CardItem = React.memo(
                   </div>
                 </div>
                 <div className={'flex w-full text-muted items-center gap-2'}>
-                  <div className={'space-x-1 inline-flex items-center'}>
-                    <DisplayStar rating={rating.overallRatingRounded} />
-                  </div>
+                  {rating && (
+                    <div className={'space-x-1 inline-flex items-center'}>
+                      <DisplayStar rating={rating.overallRatingRounded} />
+                    </div>
+                  )}
                   <div className={'gap-1 inline-flex items-center'}>
                     <MapPin size={20} />
                     <span className={'text-sm'}>{shortAddress}</span>

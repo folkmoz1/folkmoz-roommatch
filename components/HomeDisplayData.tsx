@@ -1,22 +1,31 @@
 'use client';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
-import { Listing, AddressComponent, Address, Review } from '@prisma/client';
+import {
+  Listing,
+  AddressComponent,
+  Address,
+  Review,
+  ProcessedFile,
+  Prisma,
+} from '@prisma/client';
 import { CardItem } from '@/components/CardItem';
 import { CardLoading } from '@/components/CardItem/CardLoading';
 import { useLocation } from '@/lib/hooks/useLocation';
 import { useStore } from '@/lib/zustand/store';
 
 type ListResponse = {
-  listings: Array<
-    Listing & {
-      address: Address & {
-        address_components: AddressComponent[];
+  listings: Prisma.ListingGetPayload<{
+    include: {
+      address: {
+        include: {
+          address_components: true;
+        };
       };
-      reviews: Review[];
-    }
-  >;
-  status: string;
+      image_cover: true;
+      reviews?: true;
+    };
+  }>[];
 };
 
 export const HomeDisplayData = ({}) => {
@@ -59,11 +68,7 @@ export const HomeDisplayData = ({}) => {
                   </>
                 ) : !error && data ? (
                   data.listings.map((listing) => (
-                    <CardItem
-                      key={listing.id}
-                      listing={listing}
-                      className={'w-full'}
-                    />
+                    <CardItem key={listing.id} listing={listing} />
                   ))
                 ) : (
                   <>Error</>
@@ -98,11 +103,7 @@ export const HomeDisplayData = ({}) => {
                   </>
                 ) : !error && data ? (
                   data.listings.map((listing) => (
-                    <CardItem
-                      key={listing.id}
-                      listing={listing}
-                      className={'w-full'}
-                    />
+                    <CardItem key={listing.id} listing={listing} />
                   ))
                 ) : (
                   <>Error</>
