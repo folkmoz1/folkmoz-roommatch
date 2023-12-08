@@ -26,12 +26,11 @@ export default async function RoomDetailPage({ params }) {
   }
 
   if (!room) {
-    return redirect(`/listing/${listSlug}`);
+    // return redirect(`/listing/${listSlug}`);
   }
 
   const { price, announcement, listing, roomDetail } = room;
   const displayPrice = price[0].monthly[0].min_price.toLocaleString();
-  console.log(room);
   return (
     <>
       <main className={'pb-20'}>
@@ -64,7 +63,7 @@ export default async function RoomDetailPage({ params }) {
               </div>
             </div>
           </div>
-          <div className={'hidden md:block md:col-span-3'}>i</div>
+          <div className={'hidden md:block md:col-span-3'}></div>
         </div>
       </main>
     </>

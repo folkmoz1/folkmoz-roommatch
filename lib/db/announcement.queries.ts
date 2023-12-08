@@ -1,10 +1,7 @@
 import 'server-only';
 import { prisma } from '@/lib/prisma';
 import { Room } from '@prisma/client';
-import {
-  unstable_cache as cache,
-  unstable_noStore as noStore,
-} from 'next/cache';
+import { unstable_cache as cache } from 'next/cache';
 
 export const geyOtherAnnouncements = cache(
   async (roomId) => {
@@ -64,7 +61,6 @@ export const getAnnouncementOneByIdAndListId = async (
   slug: string,
   id: string
 ) => {
-  noStore();
   const rooms = await prisma.room.findFirst({
     where: {
       id,

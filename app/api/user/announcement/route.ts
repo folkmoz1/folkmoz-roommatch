@@ -72,9 +72,12 @@ export async function DELETE(req: NextRequest) {
     });
   }
 
-  const isOwner = await prisma.announcement.findUnique({
+  const { user } = session;
+
+  const isOwner = await prisma.announcement.findFirst({
     where: {
       id,
+      userId: user.id,
     },
     select: {
       rooms: {
@@ -88,6 +91,9 @@ export async function DELETE(req: NextRequest) {
       },
     },
   });
+
+  console.log('got isOwner');
+  console.log(isOwner);
 
   if (!isOwner) {
     return NextResponse.json({
