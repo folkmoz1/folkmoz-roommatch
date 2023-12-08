@@ -9,11 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { updateProfile } from '@/lib/db/user.actions';
 import { useStore } from '@/lib/zustand/store';
-import { Player } from '@lottiefiles/react-lottie-player';
-import loadingAnimation from '@/app/(profile)/profile/loading-animation.json';
 import { useEffect, useRef } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useFormStatus } from 'react-dom';
+import { PageLoading } from '@/components/PageLoading';
 
 export default function ProfilePage() {
   const profile = useStore((state) => state.profile);
@@ -178,20 +177,7 @@ export default function ProfilePage() {
             </div>
           </>
         ) : (
-          <>
-            <div
-              className={
-                'fixed inset-0 flex justify-center items-center bg-white z-10'
-              }
-            >
-              <Player
-                autoplay
-                loop
-                src={loadingAnimation}
-                style={{ height: '300px', width: '300px' }}
-              ></Player>
-            </div>
-          </>
+          <PageLoading />
         )}
 
         <Image

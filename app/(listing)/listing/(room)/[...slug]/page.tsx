@@ -1,21 +1,27 @@
 import { Hero } from '@/app/(listing)/listing/(room)/[...slug]/hero';
-import {
-  getAnnouncementOneByIdAndListId,
-  geyOtherAnnouncements,
-} from '@/lib/db/announcement.queries';
-import { redirect } from 'next/navigation';
+import { getAnnouncementOneByIdAndListId } from '@/lib/db/announcement.queries';
 import { ContactOwner } from '@/app/(listing)/listing/(room)/[...slug]/contact';
+import { Suspense } from 'react';
+import { PageLoading } from '@/components/PageLoading';
 
 export default async function RoomDetailPage({ params }) {
+  return (
+    <>
+      <Suspense fallback={<PageLoading />}>
+        <RoomDetail params={params} />
+      </Suspense>
+    </>
+  );
+}
+
+const RoomDetail = async ({ params }) => {
   const [listSlug, roomId] = params.slug as string[];
 
   let room;
-  let otherAnnouncements;
 
   try {
     const [roomRes] = await Promise.allSettled([
       getAnnouncementOneByIdAndListId(listSlug, roomId),
-      geyOtherAnnouncements(roomId),
     ]);
 
     if (roomRes.status === 'fulfilled') {
@@ -23,10 +29,6 @@ export default async function RoomDetailPage({ params }) {
     }
   } catch (err) {
     console.error(err);
-  }
-
-  if (!room) {
-    // return redirect(`/listing/${listSlug}`);
   }
 
   const { price, announcement, listing, roomDetail } = room;
@@ -68,4 +70,4 @@ export default async function RoomDetailPage({ params }) {
       </main>
     </>
   );
-}
+};
