@@ -20,8 +20,6 @@ export const RatingDisplay = ({
 }) => {
   const isRounded = rating?.overallRatingRounded === rating?.overallRating;
 
-  console.log(rating);
-
   return (
     <>
       <div className={'flex flex-col sm:flex-row gap-8'}>
@@ -44,7 +42,6 @@ export const RatingDisplay = ({
                         fill={'#FFAD33'}
                         color={'#FFAD33'}
                         strokeWidth={2}
-                        style={{ clipPath: 'inset(0 50% 0 0)' }}
                       />
                     ))}
                     {!isRounded && (
