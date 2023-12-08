@@ -3,6 +3,7 @@ import { getAnnouncementOneByIdAndListId } from '@/lib/db/announcement.queries';
 import { ContactOwner } from '@/app/(listing)/listing/(room)/[...slug]/contact';
 import { Suspense } from 'react';
 import { PageLoading } from '@/components/PageLoading';
+import { Announcement, Prisma } from '@prisma/client';
 
 export default async function RoomDetailPage({ params }) {
   return (

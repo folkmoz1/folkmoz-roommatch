@@ -16,8 +16,10 @@ import { Button } from '@/components/ui/button';
 
 type HeroProps = {
   images: Array<ProcessedFile>;
-  announcement: Announcement;
-  listing: Listing & { address: { address_components: AddressComponent[] } };
+  announcement: Announcement | null;
+  listing:
+    | (Listing & { address: { address_components: AddressComponent[] } })
+    | null;
   price: string;
   detail: RoomDetail;
 };
@@ -36,7 +38,7 @@ export const Hero = ({
   };
 
   const shortAddress = useGetShortAddress(
-    listing.address[0].address_components
+    listing?.address[0].address_components
   );
 
   const { area, floor, bathroom_count, room_count } = detail;
@@ -90,7 +92,7 @@ export const Hero = ({
         <div className={'flex flex-col md:flex-row justify-between gap-4'}>
           <div>
             <h1 className={'text-2xl sm:text-4xl font-semibold'}>
-              {announcement.title}
+              {announcement?.title}
             </h1>
             <div
               className={
