@@ -1,11 +1,11 @@
 import { getReviewsByListingSlug } from '@/lib/db/review.queries';
-import { ReviewItem } from '@/app/(listing)/listing/(list)/[slug]/review/reviewItem';
+import { ReviewItem } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/review/reviewItem';
 import { Fragment } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { RatingDisplay } from '@/app/(listing)/listing/(list)/[slug]/review/RatingDisplay';
+import { RatingDisplay } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/review/RatingDisplay';
 import { getRating } from '@/lib/utils';
 import { auth } from '@/auth';
-import { ReviewInputForm } from '@/app/(listing)/listing/(list)/[slug]/review/form';
+import { ReviewInputForm } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/review/form';
 
 export default async function ListingReviewPage({
   params,
@@ -13,6 +13,7 @@ export default async function ListingReviewPage({
   params: { slug: string };
 }) {
   let reviews;
+  let listingId;
 
   try {
     const [reviewsRes] = await Promise.allSettled([
@@ -20,7 +21,9 @@ export default async function ListingReviewPage({
     ]);
 
     if (reviewsRes.status === 'fulfilled') {
-      reviews = reviewsRes.value;
+      const data = reviewsRes.value[0];
+      reviews = data.reviews;
+      listingId = data.listingId;
     } else {
       console.error(reviewsRes);
     }
@@ -31,8 +34,7 @@ export default async function ListingReviewPage({
   if (!reviews) {
     return null;
   }
-
-  const rating = getRating(reviews);
+  const rating = reviews.length > 0 ? getRating(reviews.reviews) : null;
 
   return (
     <>
@@ -46,7 +48,7 @@ export default async function ListingReviewPage({
             </Fragment>
           ))}
 
-        <ReviewForm listingId={reviews[0].listingId} />
+        <ReviewForm listingId={listingId} />
       </div>
     </>
   );

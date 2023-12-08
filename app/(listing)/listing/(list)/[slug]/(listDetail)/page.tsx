@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import RoomEntriesLoading from '@/app/(listing)/listing/(list)/[slug]/components/listLoading';
-import { RoomList } from '@/app/(listing)/listing/(list)/[slug]/components/RoomList';
+import RoomEntriesLoading from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/components/listLoading';
+import { RoomList } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/components/RoomList';
 import { getAnnouncementsAllByListingSlug } from '@/lib/db/announcement.queries';
 
 export default function ListingDetailPage({

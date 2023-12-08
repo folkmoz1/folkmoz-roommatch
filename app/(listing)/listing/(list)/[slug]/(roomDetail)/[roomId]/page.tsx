@@ -1,29 +1,34 @@
-import { Hero } from '@/app/(listing)/listing/(room)/[...slug]/hero';
-import { getAnnouncementOneByIdAndListId } from '@/lib/db/announcement.queries';
-import { ContactOwner } from '@/app/(listing)/listing/(room)/[...slug]/contact';
-import { Suspense } from 'react';
-import { PageLoading } from '@/components/PageLoading';
-import { Announcement, Prisma } from '@prisma/client';
+import {
+  getAnnouncementOneByIdAndListId,
+  geyOtherAnnouncements,
+} from '@/lib/db/announcement.queries';
+import { Hero } from '@/app/(listing)/listing/(list)/[slug]/(roomDetail)/[roomId]/hero';
+import { ContactOwner } from '@/app/(listing)/listing/(list)/[slug]/(roomDetail)/[roomId]/contact';
+import { redirect } from 'next/navigation';
 
 export default async function RoomDetailPage({ params }) {
-  return (
-    <>
-      <Suspense fallback={<PageLoading />}>
-        <RoomDetail params={params} />
-      </Suspense>
-    </>
-  );
-}
+  const listSlug = params.slug as string;
+  const roomId = params.roomId as string;
 
-const RoomDetail = async ({ params }) => {
-  const [listSlug, roomId] = params.slug as string[];
+  let room;
+  let otherAnnouncements;
 
-  const room = await getAnnouncementOneByIdAndListId(listSlug, roomId);
+  try {
+    const [roomRes] = await Promise.allSettled([
+      getAnnouncementOneByIdAndListId(listSlug, roomId),
+      geyOtherAnnouncements(roomId),
+    ]);
 
-  if (!room) {
-    return <div>Not found</div>;
+    if (roomRes.status === 'fulfilled') {
+      room = roomRes.value;
+    }
+  } catch (err) {
+    console.error(err);
   }
 
+  if (!room) {
+    return redirect(`/listing/${listSlug}`);
+  }
   const { price, announcement, listing, roomDetail } = room;
   const displayPrice = price[0].monthly[0].min_price.toLocaleString();
   return (
@@ -63,4 +68,4 @@ const RoomDetail = async ({ params }) => {
       </main>
     </>
   );
-};
+}

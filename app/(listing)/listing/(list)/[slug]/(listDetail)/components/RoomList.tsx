@@ -1,7 +1,7 @@
 'use client';
 
 import { Prisma, Room } from '@prisma/client';
-import { ListItem } from '@/app/(listing)/listing/(list)/[slug]/components/listItem';
+import { ListItem } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/components/listItem';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 

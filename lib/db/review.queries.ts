@@ -5,19 +5,21 @@ import { prisma } from '@/lib/prisma';
 import { Review } from '@prisma/client';
 
 export const getReviewsByListingSlug = cache(
-  async (slug: string): Promise<Review[]> => {
-    const reviews = await prisma.review.findMany({
+  async (slug: string) => {
+    const reviews = await prisma.listing.findMany({
       where: {
-        listing: {
-          slug: slug,
-        },
+        slug,
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
+        reviews: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
           },
         },
       },
