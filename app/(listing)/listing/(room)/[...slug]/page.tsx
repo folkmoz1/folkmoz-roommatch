@@ -17,18 +17,10 @@ export default async function RoomDetailPage({ params }) {
 const RoomDetail = async ({ params }) => {
   const [listSlug, roomId] = params.slug as string[];
 
-  let room;
+  const room = await getAnnouncementOneByIdAndListId(listSlug, roomId);
 
-  try {
-    const [roomRes] = await Promise.allSettled([
-      getAnnouncementOneByIdAndListId(listSlug, roomId),
-    ]);
-
-    if (roomRes.status === 'fulfilled') {
-      room = roomRes.value;
-    }
-  } catch (err) {
-    console.error(err);
+  if (!room) {
+    return <div>Not found</div>;
   }
 
   const { price, announcement, listing, roomDetail } = room;

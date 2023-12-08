@@ -1,8 +1,7 @@
 import { getToken } from 'next-auth/jwt';
-import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(req) {
+export async function middleware(req: NextRequest) {
   const { origin } = req.nextUrl;
 
   const session = await getToken({
