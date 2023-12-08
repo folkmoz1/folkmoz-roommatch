@@ -62,7 +62,6 @@ const LinkItem = ({
 
 export const Navbar = () => {
   const currentPath = usePathname();
-  const { openModal } = useModal();
 
   return (
     <>
