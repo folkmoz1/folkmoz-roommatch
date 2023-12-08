@@ -34,7 +34,7 @@ export default async function ListingReviewPage({
   if (!reviews) {
     return null;
   }
-  const rating = reviews.length > 0 ? getRating(reviews.reviews) : null;
+  const rating = reviews.length > 0 ? getRating(reviews) : null;
 
   return (
     <>
