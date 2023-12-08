@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useModal } from '@/components/context/modal';
 
 const links = [
   {
@@ -61,6 +62,7 @@ const LinkItem = ({
 
 export const Navbar = () => {
   const currentPath = usePathname();
+  const { openModal } = useModal();
 
   return (
     <>
