@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star } from 'lucide-react';
 import dayjs from '@/lib/dayjs';
 import { auth } from '@/auth';
-import { DeleteForm } from '@/app/(listing)/listing/(list)/[slug]/review/form';
+import { DeleteForm } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/review/form';
 
 type ReviewItemProps = {
   review: Review & {

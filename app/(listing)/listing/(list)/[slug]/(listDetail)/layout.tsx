@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { IconUsed } from '@/components/IconUsed';
 import React from 'react';
 import { MapPin } from 'lucide-react';
-import { Tabs } from '@/app/(listing)/listing/(list)/[slug]/components/tabs';
+import { Tabs } from '@/app/(listing)/listing/(list)/[slug]/(listDetail)/components/tabs';
 import { getRating } from '@/lib/utils';
 import { DisplayStar } from '@/components/DisplayStar';
 import { getListingBySlug, ListingWithReviews } from '@/lib/db/listing.queries';
@@ -68,7 +68,7 @@ export default async function ListingLayout({
         <div className={'px-4'}>
           <div
             className={
-              'max-w-[856px] w-full h-auto sm:h-[150px] flex flex-col gap-6 py-8 px-6 font-kanit bg-white rounded-3xl shadow-md mx-auto -mt-[75px] z-10 relative'
+              'max-w-[856px] w-full h-auto sm:h-[150px] flex flex-col gap-4 py-8 px-6 font-kanit bg-white rounded-3xl shadow-md mx-auto -mt-[75px] z-10 relative'
             }
           >
             <div
@@ -102,7 +102,9 @@ export default async function ListingLayout({
                 <MapPin size={20} />
                 {address[0].formatted_address}
               </div>
-              <div className={'text-muted font-kanit font-normal'}>
+              <div
+                className={'text-muted font-kanit font-normal w-1/3 text-right'}
+              >
                 <span className={'text-2xl text-primary font-semibold'}>
                   {minPrice} - {maxPrice}
                 </span>

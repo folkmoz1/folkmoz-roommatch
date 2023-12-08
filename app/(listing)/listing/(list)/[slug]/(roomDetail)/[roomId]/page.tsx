@@ -1,13 +1,14 @@
-import { Hero } from '@/app/(listing)/listing/(room)/[...slug]/hero';
 import {
   getAnnouncementOneByIdAndListId,
   geyOtherAnnouncements,
 } from '@/lib/db/announcement.queries';
+import { Hero } from '@/app/(listing)/listing/(list)/[slug]/(roomDetail)/[roomId]/hero';
+import { ContactOwner } from '@/app/(listing)/listing/(list)/[slug]/(roomDetail)/[roomId]/contact';
 import { redirect } from 'next/navigation';
-import { ContactOwner } from '@/app/(listing)/listing/(room)/[...slug]/contact';
 
 export default async function RoomDetailPage({ params }) {
-  const [listSlug, roomId] = params.slug as string[];
+  const listSlug = params.slug as string;
+  const roomId = params.roomId as string;
 
   let room;
   let otherAnnouncements;
@@ -26,9 +27,8 @@ export default async function RoomDetailPage({ params }) {
   }
 
   if (!room) {
-    // return redirect(`/listing/${listSlug}`);
+    return redirect(`/listing/${listSlug}`);
   }
-
   const { price, announcement, listing, roomDetail } = room;
   const displayPrice = price[0].monthly[0].min_price.toLocaleString();
   return (
