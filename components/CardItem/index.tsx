@@ -107,7 +107,12 @@ export const CardItem = React.memo(
     return (
       <>
         <span className={'flex justify-center'}>
-          <Link href={`/listing/${listing.slug}`} scroll shallow>
+          <Link
+            href={`/listing/${listing.slug}`}
+            scroll
+            shallow
+            className={'w-full'}
+          >
             <div
               className={
                 'w-full h-auto rounded-lg group overflow-hidden shadow-md bg-[--neutral-50] relative cursor-pointer hover:shadow-lg transition-all'
