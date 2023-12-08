@@ -15,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Session } from '@/types/next-auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export const ReviewInputForm = ({ listingId }: { listingId: string }) => {
+export const ReviewInputForm = ({ listingSlug }: { listingSlug: string }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
 
@@ -65,7 +64,7 @@ export const ReviewInputForm = ({ listingId }: { listingId: string }) => {
             onChange={handleRating}
           />
         </div>
-        <input type={'hidden'} name={'listingId'} value={listingId} />
+        <input type={'hidden'} name={'listingSlug'} value={listingSlug} />
         <input
           autoComplete={'off'}
           required

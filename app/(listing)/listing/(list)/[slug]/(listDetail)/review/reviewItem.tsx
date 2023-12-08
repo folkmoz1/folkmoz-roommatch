@@ -15,9 +15,7 @@ export const ReviewItem = async ({ review }: ReviewItemProps) => {
   const { user, comment, rating } = review;
   const session = await auth();
 
-  const timeFromNow = dayjs(review.createdAt)
-    .tz('Asia/Bangkok', true)
-    .fromNow();
+  const timeFromNow = dayjs(review.createdAt).tz('Asia/Bangkok').fromNow();
 
   const isOwner = session?.user ? session.user.id === user.id : false;
 

@@ -13,17 +13,15 @@ export default async function ListingReviewPage({
   params: { slug: string };
 }) {
   let reviews;
-  let listingId;
+  const listingSlug = params.slug;
 
   try {
     const [reviewsRes] = await Promise.allSettled([
-      getReviewsByListingSlug(params.slug),
+      getReviewsByListingSlug(listingSlug),
     ]);
 
     if (reviewsRes.status === 'fulfilled') {
-      const data = reviewsRes.value[0];
-      reviews = data.reviews;
-      listingId = data.listingId;
+      reviews = reviewsRes.value;
     } else {
       console.error(reviewsRes);
     }
@@ -41,24 +39,24 @@ export default async function ListingReviewPage({
       <div className={'mt-16 space-y-10'}>
         <RatingDisplay rating={rating} />
         {reviews &&
-          reviews.map((review, i) => (
+          reviews.map((review) => (
             <Fragment key={review.id}>
               <ReviewItem review={review} />
               <Separator className={'my-4'} />
             </Fragment>
           ))}
 
-        <ReviewForm listingId={listingId} />
+        <ReviewForm listingSlug={listingSlug} />
       </div>
     </>
   );
 }
 
-const ReviewForm = async ({ listingId }: { listingId: string }) => {
+const ReviewForm = async ({ listingSlug }: { listingSlug: string }) => {
   const session = await auth();
 
   return session ? (
-    <ReviewInputForm listingId={listingId} />
+    <ReviewInputForm listingSlug={listingSlug} />
   ) : (
     <div className={'font-kanit text-muted text-center'}>
       ลงชื่อเข้าใช้เพื่อรีวิว

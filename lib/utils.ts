@@ -1,7 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Review, User } from '@prisma/client';
-import { Key } from 'lucide-react';
+import { Review } from '@prisma/client';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,22 +10,14 @@ export function fetcher<T>(url: string) {
   return fetch(url).then((r) => r.json() as Promise<T>);
 }
 
-function exclude<User, Key extends keyof User>(
-  user: User,
-  keys: Key[]
-): { [p: string]: unknown } {
-  return Object.fromEntries(
-    Object.entries(user).filter(([key]) => !keys.includes(key))
-  );
-}
-
 export const getRating = (reviews: Review[]) => {
   const overallRatingInNumber = reviews.reduce(
     (acc, review) => acc + review.rating,
     0
   );
 
-  const overallRating = overallRatingInNumber / reviews.length;
+  const overallRating =
+    Math.round((overallRatingInNumber / reviews.length) * 10) / 10;
   const overallRatingRounded = Math.round(overallRating * 2) / 2;
   const overallRatingInPercentage = overallRatingRounded * 20;
 
