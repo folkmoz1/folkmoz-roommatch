@@ -103,7 +103,7 @@ export const Hero = ({
           </div>
           <div
             className={
-              'md:text-right flex sm:flex-col gap-2 items-center sm:items-start'
+              'md:text-right flex sm:flex-col gap-2 items-center sm:items-end sm:pr-4 w-1/3'
             }
           >
             <div

@@ -176,8 +176,11 @@ export async function POST(req: NextRequest) {
                 },
               },
             },
-
-            listingId: listId,
+            listing: {
+              connect: {
+                id: listId,
+              },
+            },
             roomDetail: {
               create: {
                 area: parseInt(detail.area),
@@ -206,6 +209,7 @@ export async function POST(req: NextRequest) {
             images: true,
             price: true,
             roomDetail: true,
+            listing: true,
           },
         },
       },
@@ -214,6 +218,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: 'success',
       announcementId: newRoom.id,
+      slug: newRoom.rooms[0].listing.slug,
     });
   } catch (e) {
     return NextResponse.json({
