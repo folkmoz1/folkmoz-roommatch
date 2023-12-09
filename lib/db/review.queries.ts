@@ -30,6 +30,6 @@ export const getReviewsByListingSlug = cache(
   },
   ['get-reviews-by-listing-slug'],
   {
-    revalidate: 60,
+    revalidate: 60 * 60,
   }
 );

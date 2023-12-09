@@ -57,101 +57,110 @@ export const geyOtherAnnouncements = cache(
   }
 );
 
-export const getAnnouncementOneByIdAndListId = async (
-  slug: string,
-  id: string
-) => {
-  const rooms = await prisma.room.findFirst({
-    where: {
-      id,
-      listing: {
-        slug: slug,
+export const getAnnouncementOneByIdAndListId = cache(
+  async (slug: string, id: string) => {
+    const rooms = await prisma.room.findFirst({
+      where: {
+        id,
+        listing: {
+          slug: slug,
+        },
       },
-    },
-    include: {
-      roomDetail: true,
-      images: true,
-      listing: {
-        select: {
-          address: {
-            select: {
-              address_components: true,
+      include: {
+        roomDetail: true,
+        images: true,
+        listing: {
+          select: {
+            address: {
+              select: {
+                address_components: true,
+              },
             },
           },
         },
-      },
-      announcement: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              createdAt: true,
-              phone_number: true,
+        announcement: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                createdAt: true,
+                phone_number: true,
+              },
             },
           },
         },
-      },
-      price: {
-        include: {
-          daily: true,
-          monthly: true,
+        price: {
+          include: {
+            daily: true,
+            monthly: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return rooms;
-};
+    return rooms;
+  },
+  ['get-announcement-one-by-id-and-list-id'],
+  {
+    revalidate: 60 * 60 * 24,
+  }
+);
 
-export const getAnnouncementsAllByListingSlug = async (slug: string) => {
-  const rooms = await prisma.room.findMany({
-    where: {
-      listing: {
-        slug: slug,
-      },
-    },
-    include: {
-      images: {
-        select: {
-          url: true,
+export const getAnnouncementsAllByListingSlug = cache(
+  async (slug: string) => {
+    const rooms = await prisma.room.findMany({
+      where: {
+        listing: {
+          slug: slug,
         },
       },
-      listing: {
-        select: {
-          address: {
-            select: {
-              address_components: true,
+      include: {
+        images: {
+          select: {
+            url: true,
+          },
+        },
+        listing: {
+          select: {
+            address: {
+              select: {
+                address_components: true,
+              },
             },
           },
         },
-      },
-      announcement: {
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
+        announcement: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
             },
           },
         },
-      },
-      price: {
-        include: {
-          daily: true,
-          monthly: true,
+        price: {
+          include: {
+            daily: true,
+            monthly: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
-  return rooms;
-};
+    return rooms;
+  },
+  ['get-announcements-all-by-listing-slug'],
+  {
+    revalidate: 60 * 60,
+  }
+);
 
 export const getAnnouncementsByListingId = async (
   listingId: string
