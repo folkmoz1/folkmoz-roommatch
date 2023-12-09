@@ -6,9 +6,7 @@ async function getListingDetail(slug: string) {
   const query = '?cols=address,description';
 
   const resp = await fetch(url + query, {
-    next: {
-      revalidate: 3600,
-    },
+    cache: 'force-cache',
   });
   return await resp.json();
 }
