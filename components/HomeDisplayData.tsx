@@ -52,7 +52,7 @@ export const HomeDisplayData = ({}) => {
                 'text-4xl md:text-[40px] leading-normal text-[--neutral-1000] font-semibold col-span-full mb-2'
               }
             >
-              ห้องพักแนะนำ
+              โครงการแนะนำ
             </h2>
             <div className={'col-span-full w-full'}>
               <div
@@ -87,7 +87,7 @@ export const HomeDisplayData = ({}) => {
                 'text-4xl md:text-[40px] leading-normal text-[--neutral-1000] font-semibold col-span-full mb-2'
               }
             >
-              ห้องพักใกล้ฉัน
+              โครงการใกล้ฉัน
             </h2>
             <div className={'col-span-full w-full'}>
               <div
