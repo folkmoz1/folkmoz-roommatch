@@ -55,6 +55,7 @@ export function UploadZone() {
     accept: {
       'image/png': ['.png'],
       'image/jpeg': ['.jpeg', '.jpg'],
+      'image/webp': ['.webp'],
     },
   });
 

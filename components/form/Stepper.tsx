@@ -131,7 +131,6 @@ export const StepperForm = () => {
   useEffect(() => {
     const fetcher = async () => {
       try {
-        setGlobalLoading;
         const data = {
           place: initForm.place,
           detail: initForm.detail,
@@ -142,7 +141,7 @@ export const StepperForm = () => {
         if (result.status === 200) {
           setGlobalLoading(false);
           resetForm();
-          router.push('/listing/be-condo-phaholyothin');
+          router.push(`/listing/${result.data.slug}}`);
         }
       } catch (e) {
         console.log(e);

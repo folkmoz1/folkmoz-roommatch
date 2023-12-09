@@ -55,7 +55,9 @@ const ModalContent = ({ modal }: { modal: React.ReactNode }) => {
 
 export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [modal, setModal] = useState<string | null>(null);
-  const globalLoading = useFormCreatePlaceStore((state) => state.form.global);
+  const globalLoading = useFormCreatePlaceStore(
+    (state) => state.form.global.loading
+  );
 
   useEffect(() => {
     if (modal) {
@@ -81,12 +83,14 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   }, [modal]);
 
   useEffect(() => {
-    if (globalLoading.loading) {
+    console.log('global loading', globalLoading);
+    if (globalLoading) {
       setModal('global-loading');
+      console.log('global loading');
     } else {
       setModal(null);
     }
-  }, []);
+  }, [globalLoading]);
 
   return (
     <ModalContext.Provider value={{ modal, setModal }}>
