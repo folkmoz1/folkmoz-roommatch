@@ -19,7 +19,7 @@ export default function CreateListing() {
       if (!user) {
         openModal('auth');
       } else {
-        // openModal('announcement');
+        openModal('announcement');
       }
       setMounted(true);
     }
