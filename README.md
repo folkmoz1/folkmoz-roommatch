@@ -1,7 +1,7 @@
 
 ## RoomMatch
 RoomMatch is a web app that helps you find the suitable room. It is built with Next.js and TypeScript.
-Visit the website [here](https://room-match.vercel.app/).
+Visit the website [here](https://roommatch.vercel.app/).
 
 ---
 
