@@ -6,8 +6,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function fetcher<T>(url: string) {
-  return fetch(url).then((r) => r.json() as Promise<T>);
+export async function fetcher<T>(url: string) {
+  const r = await fetch(url);
+  return (await r.json()) as Promise<T>;
 }
 
 export const getRating = (reviews: Review[]) => {

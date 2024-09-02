@@ -83,7 +83,6 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   }, [modal]);
 
   useEffect(() => {
-    console.log('global loading', globalLoading);
     if (globalLoading) {
       setModal('global-loading');
       console.log('global loading');

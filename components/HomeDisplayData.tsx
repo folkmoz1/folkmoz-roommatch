@@ -1,18 +1,9 @@
 'use client';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
-import {
-  Listing,
-  AddressComponent,
-  Address,
-  Review,
-  ProcessedFile,
-  Prisma,
-} from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { CardItem } from '@/components/CardItem';
 import { CardLoading } from '@/components/CardItem/CardLoading';
-import { useLocation } from '@/lib/hooks/useLocation';
-import { useStore } from '@/lib/zustand/store';
 
 type ListResponse = {
   listings: Prisma.ListingGetPayload<{
@@ -29,12 +20,10 @@ type ListResponse = {
 };
 
 export const HomeDisplayData = ({}) => {
-  const { data, isLoading, error } = useSWR<ListResponse, Error>(
+  const { data, isLoading } = useSWR<ListResponse, Error>(
     '/api/listing',
     fetcher
   );
-
-  const { center } = useLocation();
 
   return (
     <>
@@ -66,12 +55,12 @@ export const HomeDisplayData = ({}) => {
                       <CardLoading key={i} />
                     ))}
                   </>
-                ) : !error && data ? (
+                ) : data && data.listings ? (
                   data.listings.map((listing) => (
                     <CardItem key={listing.id} listing={listing} />
                   ))
                 ) : (
-                  <>Error</>
+                  <ErrorDisplay />
                 )}
               </div>
             </div>
@@ -101,12 +90,12 @@ export const HomeDisplayData = ({}) => {
                       <CardLoading key={i} />
                     ))}
                   </>
-                ) : !error && data ? (
+                ) : data && data.listings ? (
                   data.listings.map((listing) => (
                     <CardItem key={listing.id} listing={listing} />
                   ))
                 ) : (
-                  <>Error</>
+                  <ErrorDisplay />
                 )}
               </div>
             </div>
@@ -116,3 +105,9 @@ export const HomeDisplayData = ({}) => {
     </>
   );
 };
+
+const ErrorDisplay = () => (
+  <div className="text-center col-span-full text-red-500">
+    เกิดข้อผิดพลาดในการโหลดข้อมูล
+  </div>
+);

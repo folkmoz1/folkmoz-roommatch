@@ -115,11 +115,16 @@ export async function GET() {
       listings,
     });
   } catch (err) {
-    return NextResponse.json({
-      status: 'error',
-      errors: {
-        message: 'เกิดข้อผิดพลาดในการดึงข้อมูล',
+    return NextResponse.json(
+      {
+        status: 'error',
+        errors: {
+          message: 'เกิดข้อผิดพลาดในการดึงข้อมูล',
+        },
       },
-    });
+      {
+        status: 500,
+      }
+    );
   }
 }
