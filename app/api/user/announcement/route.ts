@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { FormCreatePlace } from '@/lib/zustand/store';
 import { deleteImage } from '@/lib/cloudinary';
+import { revalidateTag } from 'next/cache';
 
 export async function GET(req: NextRequest) {
   // get all announcement by user
@@ -122,6 +123,8 @@ export async function DELETE(req: NextRequest) {
       status: 'success',
     });
   }
+
+  revalidateTag('get-announcements-all-by-listing-slug');
 
   return NextResponse.json({
     status: 'success',

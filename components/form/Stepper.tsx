@@ -23,6 +23,7 @@ import {
 import { CloudinaryAPI } from '@/lib/apis/CloudinaryAPI';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { revalidateTag } from 'next/cache';
 
 export const StepperForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -141,6 +142,7 @@ export const StepperForm = () => {
         if (result.status === 200) {
           setGlobalLoading(false);
           resetForm();
+          revalidateTag('get-announcements-all-by-listing-slug');
           router.push(`/listing/${result.data.slug}}`);
         }
       } catch (e) {
