@@ -5,7 +5,7 @@ import { validateSignUpInput } from '@/lib/serverValidate';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  console.log(body);
+  console.log('api/user/create', body);
 
   const { valid, errors } = validateSignUpInput(body);
 

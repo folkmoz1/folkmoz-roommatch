@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { UploadZone } from '@/components/form/UploadZone';
 
@@ -26,6 +26,7 @@ const Title = ({ text }: { text: string }) => {
 
 export const DetailStep = ({ form }: { form: any }) => {
   const [useMktPrice, setMktPrice] = useState(false);
+  const mktPriceRef = useRef<HTMLDivElement>(null);
 
   const price = form.watch('price');
   const mktPrice = form.watch('mkt_price');
@@ -158,6 +159,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                           className={'w-full font-normal'}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                   name={'price'}
@@ -177,6 +179,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                           className={'w-full font-normal'}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                   name={'mkt_price'}
@@ -191,12 +194,12 @@ export const DetailStep = ({ form }: { form: any }) => {
             <div>
               <div
                 className={
-                  'w-full bg-primary px-6 pt-7 pb-2 text-white rounded-lg relative font-sans'
+                  'w-full bg-primary px-6 pt-4 pb-2 text-white rounded-lg relative font-sans flex flex-col gap-1'
                 }
               >
                 <span
                   className={
-                    'flex gap-1 absolute top-2 text-sm items-center opacity-40'
+                    'flex gap-1 text-sm items-center opacity-40 relative'
                   }
                 >
                   <svg
@@ -214,9 +217,15 @@ export const DetailStep = ({ form }: { form: any }) => {
                       strokeLinejoin="round"
                     />
                   </svg>{' '}
-                  {mktPrice}
+                  <span ref={mktPriceRef}>{mktPrice}</span>
                   <div
-                    className={'w-14 h-[2px] bg-white absolute top-2 -left-1'}
+                    style={{
+                      width:
+                        mktPriceRef.current && mktPrice
+                          ? mktPriceRef.current.offsetWidth + 20
+                          : 0,
+                    }}
+                    className={'h-[2px] bg-white absolute top-1/2 left-0'}
                   ></div>
                 </span>
                 <span className={'flex gap-1 items-center'}>
@@ -255,6 +264,7 @@ export const DetailStep = ({ form }: { form: any }) => {
                       className={'w-full font-normal'}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
               name={'price'}

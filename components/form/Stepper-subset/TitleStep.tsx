@@ -152,7 +152,7 @@ export const TitleStep = ({ control, form }: { control: any; form: any }) => {
         />
       </div>
       <div className={'space-y-3'}>
-        <Button>ระบุตำแหน่งที่ตั้ง</Button>
+        <Button type={'button'}>ระบุตำแหน่งที่ตั้ง</Button>
         <Input value={address} disabled className={'w-full'} />
         <GoogleMaps center={center} getNewPosition={getNewPosition} />
       </div>

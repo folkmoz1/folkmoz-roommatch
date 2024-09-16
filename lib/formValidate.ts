@@ -61,10 +61,16 @@ export const stepperTitleSchema = z.object({
 });
 
 export const stepperDetailSchema = z.object({
-  area: z.string().min(1, 'กรุณากรอกขนาดพื้นที่'),
+  area: z
+    .string()
+    .min(2, 'กรุณากรอกขนาดพื้นที่')
+    .regex(/^[0-9]+$/, 'กรุณากรอกเฉพาะตัวเลข'),
   bedroom_count: z.string({ required_error: 'กรุณากรอกจำนวนห้องนอน' }),
   bathroom_count: z.string({ required_error: 'กรุณากรอกจำนวนห้องน้ำ' }),
   floor: z.string({ required_error: 'กรุณากรอกจำนวนชั้น' }),
-  price: z.string().min(1, 'กรุณากรอกราคา'),
-  mkt_price: z.string(),
+  price: z
+    .string()
+    .min(1, 'กรุณากรอกราคา')
+    .regex(/^[0-9]+$/, 'กรุณากรอกราคาที่ถูกต้อง'),
+  mkt_price: z.string().regex(/^[0-9]+$/, 'กรุณากรอกราคาที่ถูกต้อง'),
 });
